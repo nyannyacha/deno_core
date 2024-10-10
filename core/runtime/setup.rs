@@ -82,7 +82,7 @@ pub fn init_v8(
   DENO_INIT.call_once(move || v8_init(v8_platform, snapshot, expose_natives));
 }
 
-fn create_cpp_heap() -> v8::UniqueRef<v8::cppgc::Heap> {
+pub fn create_cpp_heap() -> v8::UniqueRef<v8::cppgc::Heap> {
   v8::cppgc::Heap::create(
     v8::V8::get_current_platform(),
     v8::cppgc::HeapCreateParams::default(),
@@ -114,8 +114,7 @@ pub fn create_isolate(
     .embedder_wrapper_type_info_offsets(
       V8_WRAPPER_TYPE_INDEX,
       V8_WRAPPER_OBJECT_INDEX,
-    )
-    .cpp_heap(create_cpp_heap());
+    );
   let mut isolate = if will_snapshot {
     snapshot::create_snapshot_creator(
       external_refs,
